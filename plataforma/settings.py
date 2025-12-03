@@ -44,8 +44,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-       context_processors': [
+       _processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -59,31 +58,3 @@ WSGI_APPLICATION = 'plataforma.wsgi.application'
 
 # ✅ BASE DE DATOS
 DATABASE_URL = os.getenv('DATABASE_URL')
-if.parse(DATABASE_URL)
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-
-# ✅ VALIDADORES DE CONTRASEÑA
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-   django.contrib.auth.password_validation.NumericPasswordValidator'},
-]
-
-# ✅ INTERNACIONALIZACIÓN
-LANGUAGE_CODE = 'es-es'
-TIME_ZONE = 'America/Lima'
-USE_I18N = True
-USE_TZ = True
-
-# ✅ ARCHIVOS ESTÁTICOS
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# ✅ DEFAULT AUTO FIELD
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
