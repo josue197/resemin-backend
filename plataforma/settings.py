@@ -41,11 +41,13 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'plataforma.urls'
 
 # TEMPLATES
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates'],
-        {
+        'APP_DIRS': True,
+        'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -55,6 +57,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'plataforma.wsgi.application'
 
