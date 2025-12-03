@@ -1,0 +1,79 @@
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def panel_dashboard(request):
+    ...
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Panel de Administración</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .btn { display:inline-block; padding:8px 12px; border:1px solid #007bff; color:#007bff; border-radius:6px; text-decoration:none; }
+    .btn-primary { background:#007bff; color:#fff; }
+    .badge { padding:4px 8px; border-radius:12px; background:#eee; }
+    .success { color: #0a7; }
+    .error { color: #c00; }
+    ul { padding-left: 20px; }
+    label { display: inline-block; margin: 6px 0; }
+  </style>
+</head>
+<body>
+
+  <h2>Panel de Administración</h2>
+
+  {% if messages %}
+    <div>
+      {% for m in messages %}
+        <p class="{{ m.tags }}">{{ m }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="card">
+    <h3>1) Subir Nuevo Excel</h3>
+    <form action="{% url 'panel_subir_excel' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label>Archivo (.xlsx): <input type="file" name="excel_file" accept=".xlsx" required></label>
+      <label><input type="checkbox" name="activo"> Marcar como activo</label>
+      <button class="btn btn-primary" type="submit">Subir</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>2) Excel Activo</h3>
+    {% if activo %}
+      <p>Actualmente activo: <span class="badge">ID {{ activo.id }} | {{ activo.fecha_subida }}</span></p>
+    {% else %}
+      <p class="error">No hay un Excel activo.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3>3) Lista de Excels</h3>
+    {% if archivos %}
+      <ul>
+        {% for a in archivos %}
+          <li>
+            ID {{ a.id }} — {{ a.fecha_subida }} —
+            {% if a.activo %}<strong>Activo</strong>{% else %}Inactivo{% endif %}
+            &nbsp;|&nbsp;
+            <a class="btn" href="{% url 'panel_configurar_columnas' a.id %}">Configurar columnas</a>
+            &nbsp;
+            {% if not a.activo %}
+              <a class="btn" href="{% url 'panel_activar_excel' a.id %}">Activar</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No hay excels subidos.</p>
+    {% endif %}
+  </div>
+
+</body>
+</html>

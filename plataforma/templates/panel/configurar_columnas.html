@@ -1,0 +1,74 @@
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def panel_dashboard(request):
+    ...
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Configurar Columnas</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .btn { display:inline-block; padding:8px 12px; border:1px solid #007bff; color:#007bff; border-radius:6px; text-decoration:none; }
+    .btn-primary { background:#007bff; color:#fff; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 12px; }
+    label { display:block; }
+  </style>
+</head>
+<body>
+
+  <h2>Configurar Columnas — Excel ID {{ archivo.id }}</h2>
+
+  {% if messages %}
+    <div>
+      {% for m in messages %}
+        <p class="{{ m.tags }}">{{ m }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="card">
+      <h3>1) Seleccionar DNI y Fecha de Ingreso</h3>
+      <label>DNI:
+        <select name="dni_col" required>
+          <option value="">-- seleccionar --</option>
+          {% for c in columnas %}
+            <option value="{{ c.nombre_columna }}" {% if c.nombre_columna == dni_actual %}selected{% endif %}>{{ c.nombre_columna }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Fecha de Ingreso:
+        <select name="fecha_col" required>
+          <option value="">-- seleccionar --</option>
+          {% for c in columnas %}
+            <option value="{{ c.nombre_columna }}" {% if c.nombre_columna == fecha_actual %}selected{% endif %}>{{ c.nombre_columna }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+
+    <div class="card">
+      <h3>2) Columnas Visibles</h3>
+      <div class="grid">
+        {% for c in columnas %}
+          <label>
+            <input type="checkbox" name="visibles" value="{{ c.nombre_columna }}" {% if c.visible %}checked{% endif %}>
+            {{ c.nombre_columna }}
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar configuración</button>
+    <a class="btn" href="{% url 'panel_dashboard' %}">Volver al panel</a>
+  </form>
+
+</body>
+</html>

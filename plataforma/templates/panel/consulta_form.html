@@ -1,0 +1,33 @@
+
+{% extends 'panel/base.html' %}
+{% block title %}Consulta Historial{% endblock %}
+{% block content %}
+<h2 class="mb-4">Consulta tu historial laboral</h2>
+<form method="post" class="card p-3 mb-4">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">DNI</label>
+    <input type="text" name="dni" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Fecha de ingreso</label>
+    <input type="text" name="fecha" class="form-control" placeholder="dd/mm/yyyy" required>
+  </div>
+  <button class="btn btn-primary">Consultar</button>
+</form>
+
+{% if resultado %}
+<div class="card p-3">
+  <h4>Resultado:</h4>
+  <ul>
+    {% for key, value in resultado.items %}
+      <li><strong>{{ key }}:</strong> {{ value }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% if error %}
+<div class="alert alert-danger mt-3">{{ error }}</div>
+{% endif %}
+{% endblock %}
