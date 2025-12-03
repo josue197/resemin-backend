@@ -118,7 +118,8 @@ SECURE_SSL_REDIRECT = not DEBUG  # si Render fuerza HTTPS, puedes dejarlo True e
 # ]
 # CORS_ALLOW_CREDENTIALS = True
 
-# === Logging para ver tracebacks con DEBUG=False ===
+# === Logging para ver tracebacks con DEBUG=TRUE ===
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -136,5 +137,7 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'ERROR',
             'propagate': True,
-
+        },
+    },
+}
 
