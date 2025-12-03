@@ -4,11 +4,15 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
+from django.http import HttpResponse
 
 from consulta.views import (
     panel_dashboard, panel_subir_excel, panel_configurar_columnas, panel_activar_excel,
     consulta_api, columnas_visibles_api, consulta_form
 )
+
+def health(request):
+    return HttpResponse("ok", content_type="text/plain")
 
 urlpatterns = [
     # Admin de Django
@@ -27,6 +31,7 @@ urlpatterns = [
     # Página para colaboradores (formulario)
     path('consulta/', consulta_form, name='consulta_form'),
 
-    # Redirección raíz → formulario
+    # Raíz → formulario
     path('', RedirectView.as_view(url='/consulta/', permanent=False)),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+    # Healthcheck (opcional)

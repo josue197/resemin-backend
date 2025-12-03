@@ -135,6 +135,55 @@ def panel_activar_excel(request, archivo_id):
     messages.success(request, f'Excel {archivo.id} activado.')
     return redirect('panel_dashboard')
 
+
+# --- Funciones auxiliares ---
+def _get_activo(): ...
+def _get_config(archivo): ...
+def _normalize_fecha(fecha_str): ...
+
+# --- API pública ---
+def consulta_api(request): ...
+def columnas_visibles_api(request): ...
+
+# --- Panel (requiere login) ---
+@login_required
+def panel_dashboard(request): ...
+@login_required
+def panel_subir_excel(request): ...
+@login_required
+def panel_configurar_columnas(request, archivo_id): ...
+@login_required
+def panel_activar_excel(request, archivo_id): ...
+
+# --- Formulario público (sin login) ---
+def consulta_form(request):
+    context = {'resultado': None, 'error': None}
+    if request.method == 'POST':
+        dni = (request.POST.get('dni') or '').strip()
+        fecha = (request.POST.get('fecha') or '').strip()
+        archivo = _get_activo()
+        if not archivo:
+            context['error'] = 'No hay un Excel activo para consultar.'
+        elif not dni or not fecha:
+            context['error'] = 'Ingrese DNI y fecha.'
+        else:
+            dni_col, fecha_col, visibles = _get_config(archivo)
+            if not dni_col or not fecha_col:
+                context['error'] = 'Configura las columnas DNI y Fecha de ingreso en el panel.'
+            else:
+                posibles = Registro.objects.filter(**{f"datos__{dni_col}": dni, 'archivo': archivo})
+                fecha_norm = _normalize_fecha(fecha)
+                hallado = None
+                for reg in posibles:
+                    valor_fecha = (reg.datos.get(fecha_col) or '').strip()
+                    if valor_fecha == fecha or valor_fecha == fecha_norm:
+                        hallado = reg
+                        break
+                if hallado:
+                    context['resultado'] = {col: hallado.datos.get(col) for col in visibles}
+                else:
+                    context['error'] = 'No encontrado.'
+
 # ---------- NUEVO: formulario de consulta para colaboradores (sin login) ----------
 def consulta_form(request):
     """
