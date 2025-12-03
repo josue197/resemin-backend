@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Para servir estáticos en producción
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -39,13 +40,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'plataforma.urls'
 
-# TEMPLATES (CORRECTO)
+# TEMPLATES
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
+        {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -71,17 +71,19 @@ DATABASES = {
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # CSRF (para producción con HTTPS en Render)
 CSRF_TRUSTED_ORIGINS = [
     'https://resemin-backend.onrender.com',
 ]
 
-# LOCALIZACIÓN/IDIOMA (opcional, ajusta si lo usas)
+# LOCALIZACIÓN
 LANGUAGE_CODE = 'es-pe'
 TIME_ZONE = 'America/Lima'
 USE_I18N = True
 USE_TZ = True
 
-# PRIMARY KEY por defecto (Django 5)
+# PRIMARY KEY por defecto
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
